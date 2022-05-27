@@ -4,10 +4,10 @@ import axios from 'axios';
 
 export const FileUploader = ({}) => {
 
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
 
     const onInputChange = (e) => {
-        setFile(e.target.files[0])
+        setFiles(e.target.files)
     }
 
     const handleSubmit = (e) => {
@@ -15,7 +15,9 @@ export const FileUploader = ({}) => {
 
         const data = new FormData();
 
-        data.append('file', file)
+        for (let i = 0; i < files.length; i++) {
+            data.append('file', files[i])
+        }
 
         axios.post('http://localhost:8000/upload', data)
                 .then((e) => { console.log('Success!') })
