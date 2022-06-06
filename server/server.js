@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors());
+app.use(express.static('public/invoices'))
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -15,7 +16,7 @@ const storage = multer.diskStorage({
     }
 });
 
-const upload = multer({storage}).single('file');
+const upload = multer({storage}).array('file');
 
 app.post('/upload', (req, res) => {
     upload(req, res, (err) => {
@@ -23,7 +24,7 @@ app.post('/upload', (req, res) => {
             return res.status(500).json(err)
         }
 
-        return res.status(200).send(req.file)
+        return res.status(200).send(req.files)
     })
 });
 
