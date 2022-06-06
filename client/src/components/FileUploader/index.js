@@ -5,8 +5,9 @@ import axios from 'axios';
 export const FileUploader = ({}) => {
 
     const [userInput, setUser] = useState({
-        email: '',
-        subject: ''
+        customer_email: '',
+        customer_names: '',
+        reference: ''
     })
     const [file, setFile] = useState(null);
 
@@ -26,7 +27,7 @@ export const FileUploader = ({}) => {
         data.append('customer_names', userInput.customer_names);
         data.append('reference', userInput.reference);
 
-        axios.post('http://localhost:2000/accounting-sales/sendInvoice', data)
+        axios.post('http://localhost:8000/upload', data)
                 .then((e) => { console.log('Success!') })
                 .catch((e) => { console.log('Error!') })
     }
