@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import './styles.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-export const FileUploader = ({}) => {
+export const FileUploader = ({ onSuccess }) => {
 
     const [userInput, setUser] = useState({
         email: '',
@@ -14,6 +15,11 @@ export const FileUploader = ({}) => {
         e.persist();
         setUser({ ...userInput, [e.target.name]:e.target.value });
         setFile(e.target.files[0])
+      
+    const [files, setFiles] = useState([]);
+
+    const onInputChange = (e) => {
+        setFiles(e.target.files)
     }
 
     const handleSubmit = (e) => {
@@ -29,6 +35,21 @@ export const FileUploader = ({}) => {
         axios.post('http://localhost:2000/accounting-sales/sendInvoice', data)
                 .then((e) => { console.log('Success!') })
                 .catch((e) => { console.log('Error!') })
+
+        for (let i = 0; i < files.length; i++) {
+            data.append('file', files[i])
+        }
+
+        axios.post('http://localhost:8000/upload', data)
+                .then((response) => { 
+                    console.log('Success!')
+                    toast.success('File Uploaded Successfully!')
+                    onSuccess(response.data)
+                })
+                .catch((e) => { 
+                    console.log('Error!') 
+                    toast.success('File Upload Error!')
+                })
     }
 
     return (
